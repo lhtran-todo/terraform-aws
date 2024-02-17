@@ -17,11 +17,6 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set TF Organization and Workspace
-      run: |
-        export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
-        export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
-
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
@@ -34,11 +29,15 @@ jobs:
 
     - name: Terraform Init
       id: init
-      run: terraform init
+      run: |
+        export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
+        export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
+        terraform init
 
     - name: Terraform Validate
       id: validate
       run: terraform validate -no-color
 
     - name: Terraform Apply
-      run: terraform apply -auto-approve -var env=${{ github.event.inputs.name }}
+      run: |
+        terraform apply -auto-approve -var env=${{ github.event.inputs.name }}
