@@ -2,7 +2,13 @@ name: Create AWS Infrastructure
 
 on:
   workflow_dispatch:
-
+    inputs:
+      action:
+        type: choice
+        description: Environment to create or destroy
+        options: 
+        - create
+        - destroy
 jobs:
   terraform:
     runs-on: ubuntu-22.04
@@ -36,4 +42,4 @@ jobs:
       run: |
         export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
-        terraform apply -auto-approve -var env=${{ vars.ENV_NAME }}
+        terraform apply -auto-approve -var env=${{ vars.ENV_NAME }} ${{ github.event.inputs.action == 'destroy' && '-destroy' }}
