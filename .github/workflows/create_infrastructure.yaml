@@ -10,7 +10,7 @@ on:
         - prod
         - dev
 jobs:
-  build:
+  terraform:
     runs-on: ubuntu-22.04
     environment: ${{ github.event.inputs.name }}
     steps:
