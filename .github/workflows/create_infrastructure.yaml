@@ -17,11 +17,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    # - name: Configure AWS Credentials
-    #   uses: aws-actions/configure-aws-credentials@v4
-    #   with:
-    #     aws-region: ${{ vars.AWS_DEFAULT_REGION }}
-    #     role-to-assume: ${{ vars.OIDC_GITHUB_ACTIONS_ARN }}
+    - name: Set TF Organization and Workspace
+      run: |
+        export TF_ORGANIZATION=${{ vars.TF_ORGANIZATION }}
+        export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3

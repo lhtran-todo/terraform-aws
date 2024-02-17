@@ -1,11 +1,11 @@
 terraform {
   required_version = "~> 1.7"
   cloud {
-    organization = "lhtran" # export TF_CLOUD_ORGANIZATION='lhtran'
+    # organization = "lhtran" # export TF_CLOUD_ORGANIZATION='lhtran'
 
-    workspaces {
-      name = "lhtran-todo-dev" # export TF_WORKSPACE='lhtran-todo-cf-frontend-dev'
-    }
+    # workspaces {
+    #   name = "lhtran-todo-dev" # export TF_WORKSPACE='lhtran-todo-cf-frontend-dev'
+    # }
   }
 
   required_providers {
