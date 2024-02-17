@@ -2,17 +2,11 @@ name: Create AWS Infrastructure
 
 on:
   workflow_dispatch:
-    inputs:
-      name:
-        type: choice
-        description: Environment to deploy
-        options: 
-        - dev
-        - prod
+
 jobs:
   terraform:
     runs-on: ubuntu-22.04
-    environment: ${{ github.event.inputs.name }}
+    environment: ${{ (github.head_ref || github.ref_name) == 'main' && 'prod' ||  (github.head_ref || github.ref_name) }}
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
@@ -42,4 +36,4 @@ jobs:
       run: |
         export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
-        terraform apply -auto-approve -var env=${{ github.event.inputs.name }}
+        terraform apply -auto-approve -var env=${{ vars.ENV_NAME }}
