@@ -1,0 +1,45 @@
+name: Manual Trigger Workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        type: choice
+        description: Environment to deploy
+        options: 
+        - prod
+        - dev
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    environment: ${{ github.event.inputs.name }}
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # - name: Configure AWS Credentials
+    #   uses: aws-actions/configure-aws-credentials@v4
+    #   with:
+    #     aws-region: ${{ vars.AWS_DEFAULT_REGION }}
+    #     role-to-assume: ${{ vars.OIDC_GITHUB_ACTIONS_ARN }}
+
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+
+    - name: Terraform fmt
+      id: fmt
+      run: terraform fmt -check -recursive
+      continue-on-error: true
+
+    - name: Terraform Init
+      id: init
+      run: terraform init
+
+    - name: Terraform Validate
+      id: validate
+      run: terraform validate -no-color
+
+    - name: Terraform Apply
+      run: terraform apply -auto-approve -var env=${{ github.event.inputs.name }}

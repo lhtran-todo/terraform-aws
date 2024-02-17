@@ -1,0 +1,6 @@
+installCRDs: true
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: "${cert_manager_iam_role}"
+securityContext:
+  fsGroup: 1001

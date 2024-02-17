@@ -1,0 +1,17 @@
+configs:
+  params:
+    server.insecure: true
+
+server:
+  ingress:
+    enabled: true
+    hostname: argocd.lhtran.net
+    ingressClassName: nginx
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-lhtran-net-stg
+      nginx.ingress.kubernetes.io/force-ssl-redirect: "true"
+      nginx.ingress.kubernetes.io/backend-protocol: "HTTP"
+    extraTls:
+      - hosts:
+        - argocd.lhtran.net
+        secretName: argocd-lhtran-net
