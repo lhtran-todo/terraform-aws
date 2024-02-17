@@ -23,19 +23,16 @@ jobs:
         cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
     - name: Terraform fmt
-      id: fmt
       run: terraform fmt -check -recursive
       continue-on-error: true
 
     - name: Terraform Init
-      id: init
       run: |
         export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
         terraform init
 
     - name: Terraform Validate
-      id: validate
       run: terraform validate -no-color
 
     - name: Terraform Apply
