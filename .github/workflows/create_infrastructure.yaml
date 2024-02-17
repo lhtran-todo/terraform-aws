@@ -7,8 +7,8 @@ on:
         type: choice
         description: Environment to deploy
         options: 
-        - prod
         - dev
+        - prod
 jobs:
   terraform:
     runs-on: ubuntu-22.04
@@ -40,4 +40,6 @@ jobs:
 
     - name: Terraform Apply
       run: |
+        export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
+        export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
         terraform apply -auto-approve -var env=${{ github.event.inputs.name }}
