@@ -19,7 +19,7 @@ jobs:
 
     - name: Set TF Organization and Workspace
       run: |
-        export TF_ORGANIZATION=${{ vars.TF_ORGANIZATION }}
+        export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
 
     - name: Setup Terraform
