@@ -39,7 +39,7 @@ jobs:
       run: |
         export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
-        terraform apply -input=false -auto-approve -var env=${{ vars.ENV_NAME }} ${{ github.event.inputs.action == 'destroy' && '-destroy' }}
+        terraform apply -input=false -auto-approve -var env=${{ vars.ENV_NAME }}${{ (github.event.inputs.action == 'destroy' && ' -destroy') || "" }}
 
     - name: Terraform output
       id: tf
