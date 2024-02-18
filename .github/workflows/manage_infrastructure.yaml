@@ -48,6 +48,8 @@ jobs:
       id: tf
       if: ${{ github.event.inputs.action == 'create' }}
       run: |
+        export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
+        export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
         echo "cluster_name=$(terraform output cluster_name)" >> "$GITHUB_OUTPUT"
         echo "eks_version=$(terraform output eks_version)" >> "$GITHUB_OUTPUT"
 
