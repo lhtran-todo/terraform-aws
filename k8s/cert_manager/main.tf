@@ -19,7 +19,7 @@ resource "helm_release" "cert_manager" {
   namespace        = "cert-manager"
   create_namespace = true
   force_update     = true
-  version          = "~> 1.12.0"
+  version          = "~> 1.14"
   values = [
     templatefile("${path.module}/values.yaml", {
       cert_manager_iam_role = aws_iam_role.cert_manager.arn

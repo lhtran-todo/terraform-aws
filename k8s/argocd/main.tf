@@ -4,7 +4,7 @@ resource "helm_release" "argo" {
   chart            = "argo-cd"
   namespace        = "argo"
   create_namespace = true
-  version          = "~> 5.34"
+  version          = "~> 6.0"
   values = [
     "${file("${path.module}/values.yaml")}"
   ]
