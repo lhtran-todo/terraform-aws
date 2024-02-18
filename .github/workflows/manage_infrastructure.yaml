@@ -12,6 +12,9 @@ on:
 jobs:
   terraform:
     runs-on: ubuntu-22.04
+    permissions:
+      id-token: write
+      contents: read
     environment: ${{ (github.head_ref || github.ref_name) == 'main' && 'prod' ||  (github.head_ref || github.ref_name) }}
     steps:
     - name: Checkout repository
