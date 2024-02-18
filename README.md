@@ -3,17 +3,17 @@
 ## Terraform
 This module will provision:
 - EKS:
--- AWS VPC CNI with network prefix
--- AWS Load Balancer Controller
--- Ingress-NGINX Controller
--- cert-manager
--- ArgoCD
--- Secrets Store CSI with AWS provider
+  - AWS VPC CNI with network prefix
+  - AWS Load Balancer Controller
+  - Ingress-NGINX Controller
+  - cert-manager
+  - ArgoCD
+  - Secrets Store CSI with AWS provider
 - RDS MultiAZ Cluster:
--- DB credential in Secrets Manager
--- DB connection in SSM Parameter Store
+  - DB credential in Secrets Manager
+  - DB connection in SSM Parameter Store
 - Route53:
--- ArgoCD and Todo record
+  - ArgoCD and Todo record
 
 Ingress-NGINX Controller will create a AWS Network LoadBalancer and TLS is terminated at the controller with `ingressClassName: nginx` and annotation `cert-manager.io/cluster-issuer: letsencrypt-lhtran-net-example`
 ```
