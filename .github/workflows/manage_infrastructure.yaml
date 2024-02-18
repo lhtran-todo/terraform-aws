@@ -26,17 +26,40 @@ jobs:
       run: terraform fmt -check -recursive
       continue-on-error: true
 
-    - name: Terraform Init
+    - name: Terraform init
       run: |
         export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
         terraform init
 
-    - name: Terraform Validate
+    - name: Terraform validate
       run: terraform validate -no-color
 
-    - name: Terraform Apply
+    - name: Terraform ${{ (github.event.inputs.action == 'create' && 'apply') || (github.event.inputs.action)  }}
+      id: tf
       run: |
         export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
         terraform apply -auto-approve -var env=${{ vars.ENV_NAME }} ${{ github.event.inputs.action == 'destroy' && '-destroy' }}
+        echo "cluster_name=$(terraform output cluster_name)" >> "$GITHUB_OUTPUT"
+        echo "eks_version=$(terraform output eks_version)" >> "$GITHUB_OUTPUT"
+
+    - name: AWS credentials
+      if: ${{ github.event.inputs.action == 'create' }}
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-region: ${{ vars.AWS_DEFAULT_REGION}}
+        role-to-assume: ${{ vars.OIDC_GITHUB_ACTIONS_ARN}}
+
+    - name: Generate kubeconfig
+      if: ${{ github.event.inputs.action == 'create' }}
+      run: aws eks update-kubeconfig --region ${{ vars.AWS_DEFAULT_REGION}} --name ${{ steps.tf.outputs.cluster_name }}
+
+    - name: Kubectl apply manual Kubernetes manifests
+      if: ${{ github.event.inputs.action == 'create' }}
+      working-directory: ./k8s/01.manual_k8s
+      run: |
+        curl -LO "https://dl.k8s.io/release/${{ steps.tf.outputs.eks_version }}/bin/linux/amd64/kubectl"
+        chmod +x ./kubectl
+        kubectl apply -f .
+              
