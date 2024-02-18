@@ -36,11 +36,15 @@ jobs:
       run: terraform validate -no-color
 
     - name: Terraform ${{ (github.event.inputs.action == 'create' && 'apply') || (github.event.inputs.action)  }}
-      id: tf
       run: |
         export TF_CLOUD_ORGANIZATION=${{ vars.TF_CLOUD_ORGANIZATION }}
         export TF_WORKSPACE=${{ vars.TF_WORKSPACE }}
         terraform apply -input=false -auto-approve -var env=${{ vars.ENV_NAME }} ${{ github.event.inputs.action == 'destroy' && '-destroy' }}
+
+    - name: Terraform output
+      id: tf
+      if: ${{ github.event.inputs.action == 'create' }}
+      run: |
         echo "cluster_name=$(terraform output cluster_name)" >> "$GITHUB_OUTPUT"
         echo "eks_version=$(terraform output eks_version)" >> "$GITHUB_OUTPUT"
 
